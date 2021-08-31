@@ -16,7 +16,7 @@ namespace Assets.Scripts
         {
             float moveDistance = speed * Time.deltaTime;
             CheckCollisions(moveDistance);
-            transform.Translate(Vector3.forward * Time.deltaTime * speed);
+            transform.Translate(speed * Time.deltaTime * Vector3.forward);
         }
         void CheckCollisions(float moveDistance)
         {
