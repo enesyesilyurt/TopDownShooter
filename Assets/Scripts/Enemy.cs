@@ -12,34 +12,52 @@ namespace Assets.Scripts
 
         NavMeshAgent pathFinder;
         Transform target;
+        LivingEntity targetEntity;
 
         float attackDistanceThreshold = 1.5f;
         float timeBetweenAttacks = 1;
         float nextAttackTime;
         float myCollisionRadius;
         float targetCollisionRadius;
+        float damage = 1;
+
+        bool hasTarget;
         protected override void Start()
         {
             base.Start();
             pathFinder = GetComponent<NavMeshAgent>();
 
-            currentState = State.Chasing;
-            target = GameObject.FindGameObjectWithTag("Player").transform;
+            if (GameObject.FindGameObjectWithTag("Player") != null)
+            {
+                currentState = State.Chasing;
+                hasTarget = true;
+                target = GameObject.FindGameObjectWithTag("Player").transform;
+                targetEntity = target.GetComponent<LivingEntity>();
+                targetEntity.OnDeath += OnTargetDeath;
 
-            myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-            targetCollisionRadius = GetComponent<CapsuleCollider>().radius;
+                myCollisionRadius = GetComponent<CapsuleCollider>().radius;
+                targetCollisionRadius = GetComponent<CapsuleCollider>().radius;
 
-            StartCoroutine(UpdatePath());
+                StartCoroutine(UpdatePath());
+            }
+        }
+        void OnTargetDeath()
+        {
+            hasTarget = false;
+            currentState = State.Idle;
         }
         void Update()
         {
-            if (Time.time > nextAttackTime)
+            if (hasTarget)
             {
-                float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
-                if (sqrDstToTarget < Mathf.Pow(attackDistanceThreshold+myCollisionRadius+targetCollisionRadius, 2))
+                if (Time.time > nextAttackTime)
                 {
-                    nextAttackTime = timeBetweenAttacks + Time.time;
-                    StartCoroutine(Attack());
+                    float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
+                    if (sqrDstToTarget < Mathf.Pow(attackDistanceThreshold + myCollisionRadius + targetCollisionRadius, 2))
+                    {
+                        nextAttackTime = timeBetweenAttacks + Time.time;
+                        StartCoroutine(Attack());
+                    }
                 }
             }
         }
@@ -55,8 +73,16 @@ namespace Assets.Scripts
 
             float attackSpeed = 3;
             float percent = 0;
+
+            bool hasAppliedDamage = false;
+
             while (percent <= 1)
             {
+                if(percent>=.5f && !hasAppliedDamage)
+                {
+                    hasAppliedDamage = true;
+                    targetEntity.TakeDamage(damage);
+                }
                 percent += Time.deltaTime * attackSpeed;
                 float interpolation = (Mathf.Pow(percent, 2) + percent) * 4;
                 transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
@@ -69,13 +95,13 @@ namespace Assets.Scripts
         IEnumerator UpdatePath()
         {
             float refreshRate = .25f;
-            while (target != null)
+            while (hasTarget)
             {
                 if (currentState == State.Chasing)
                 {
                     Vector3 dirToTarget = (target.position - transform.position).normalized;
 
-                    Vector3 targetPosition = target.position-dirToTarget*(myCollisionRadius+targetCollisionRadius+attackDistanceThreshold/2);
+                    Vector3 targetPosition = target.position - dirToTarget * (myCollisionRadius + targetCollisionRadius + attackDistanceThreshold / 2);
                     if (!dead)
                     {
                         pathFinder.SetDestination(targetPosition);

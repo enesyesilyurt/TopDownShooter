@@ -17,17 +17,22 @@ namespace Assets.Scripts
         }
         public void TakeHit(float damage, RaycastHit hit)
         {
-            health -= damage;
-            if (health <= 0)
-            {
-                Die();
-            }
+            TakeDamage(damage);
         }
         protected void Die()
         {
             dead = true;
             OnDeath?.Invoke();
             GameObject.Destroy(gameObject);
+        }
+
+        public void TakeDamage(float damage)
+        {
+            health -= damage;
+            if (health <= 0)
+            {
+                Die();
+            }
         }
     }
 }

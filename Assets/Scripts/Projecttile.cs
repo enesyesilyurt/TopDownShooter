@@ -8,6 +8,19 @@ namespace Assets.Scripts
         public LayerMask collisionMask;
         float speed = 10;
         float damage = 1;
+
+        float lifetime = 3;
+        float skinWidth = .1f;
+        private void Start()
+        {
+            Destroy(gameObject, lifetime);
+
+            Collider[] initialCollisions = Physics.OverlapSphere(transform.position, .1f, collisionMask);
+            if (initialCollisions.Length > 0)
+            {
+                OnHitObject(initialCollisions[0]);
+            }
+        }
         public void SetSpeed(float newSpeed)
         {
             speed = newSpeed;
@@ -22,7 +35,7 @@ namespace Assets.Scripts
         {
             Ray ray = new Ray(transform.position, transform.forward);
             RaycastHit hit;
-            if(Physics.Raycast(ray,out hit, moveDistance, collisionMask, QueryTriggerInteraction.Collide))
+            if(Physics.Raycast(ray,out hit, moveDistance+skinWidth, collisionMask, QueryTriggerInteraction.Collide))
             {
                 OnHitObject(hit);
             }
@@ -33,6 +46,15 @@ namespace Assets.Scripts
             if (damageableObject != null)
             {
                 damageableObject.TakeHit(damage, hit);
+            }
+            GameObject.Destroy(gameObject);
+        }
+        void OnHitObject(Collider collider)
+        {
+            IDamageable damageableObject = collider.GetComponent<IDamageable>();
+            if (damageableObject != null)
+            {
+                damageableObject.TakeDamage(damage);
             }
             GameObject.Destroy(gameObject);
         }
