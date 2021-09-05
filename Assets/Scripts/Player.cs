@@ -28,8 +28,7 @@ namespace Assets.Scripts
 
             Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-            float rayDistance;
-            if(groundPlane.Raycast(ray,out rayDistance))
+            if (groundPlane.Raycast(ray, out float rayDistance))
             {
                 Vector3 point = ray.GetPoint(rayDistance);
                 controller.LookAt(point);
