@@ -86,6 +86,8 @@ namespace Assets.Scripts
             Queue<Coord> queue=new Queue<Coord>();
             queue.Enqueue(mapCentre);
             mapFlags[mapCentre.x, mapCentre.y] = true;
+
+            int accesibleTileCount = 1;
             while (queue.Count>0)
             {
                 Coord tile = queue.Dequeue();
@@ -103,12 +105,15 @@ namespace Assets.Scripts
                                 {
                                     mapFlags[neighbourX, neighbourY] = true;
                                     queue.Enqueue(new Coord(neighbourX, neighbourY));
+                                    accesibleTileCount++;
                                 }
                             }
                         }
                     }
                 }
             }
+            int targetAccessibleTileCount = (int)mapSize.x * (int)mapSize.y - currentObstacleCount;
+            return targetAccessibleTileCount == accesibleTileCount;
         }
         Vector3 CoordToPosition(int x,int y)
         {
@@ -131,6 +136,15 @@ namespace Assets.Scripts
         {
             x = _x;
             y = _y;
+        }
+
+        public static bool operator==(Coord c1,Coord c2)
+        {
+            return c1.x == c2.x && c1.y == c2.y;
+        }
+        public static bool operator !=(Coord c1, Coord c2)
+        {
+            return !(c1 == c2);
         }
     }
 }
