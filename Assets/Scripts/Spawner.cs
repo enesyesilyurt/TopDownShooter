@@ -29,6 +29,8 @@ namespace Assets.Scripts
 
         bool isDisabled;
 
+        public event Action<int> OnNewWave;
+
         private void Start()
         {
             PlayerEntity = FindObjectOfType<Player>();
@@ -96,6 +98,11 @@ namespace Assets.Scripts
                 NextWave();
             }
         }
+
+        void ResetPlayerPosition()
+        {
+            playerTransform.position = map.GetTileFromPosition(Vector3.zero).position + Vector3.up*3;
+        }
         void NextWave()
         {
             currentWaveNumber++;
@@ -104,6 +111,12 @@ namespace Assets.Scripts
                 currentWave = waves[currentWaveNumber - 1];
                 enemiesRemainingToSpawn = currentWave.enemyCount;
                 enemiesRemainingAlive = enemiesRemainingToSpawn;
+
+                if (OnNewWave != null)
+                {
+                    OnNewWave(currentWaveNumber);
+                }
+                ResetPlayerPosition();
             }
         }
         [Serializable]

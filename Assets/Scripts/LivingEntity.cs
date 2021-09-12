@@ -19,6 +19,7 @@ namespace Assets.Scripts
         {
             TakeDamage(damage);
         }
+        [ContextMenu("Self Destruct")]
         protected void Die()
         {
             dead = true;
