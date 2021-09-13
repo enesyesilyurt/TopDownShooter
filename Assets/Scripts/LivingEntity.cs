@@ -15,7 +15,7 @@ namespace Assets.Scripts
         {
             health = startingHealth;
         }
-        public void TakeHit(float damage, RaycastHit hit)
+        public virtual void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
         {
             TakeDamage(damage);
         }
@@ -27,7 +27,7 @@ namespace Assets.Scripts
             GameObject.Destroy(gameObject);
         }
 
-        public void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage)
         {
             health -= damage;
             if (health <= 0)

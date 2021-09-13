@@ -9,6 +9,7 @@ namespace Assets.Scripts
     {
         public enum State { Idle, Chasing, Attacking };
         State currentState;
+        public ParticleSystem DeathEffect;
 
         NavMeshAgent pathFinder;
         Transform target;
@@ -36,10 +37,19 @@ namespace Assets.Scripts
                 targetEntity.OnDeath += OnTargetDeath;
 
                 myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-                targetCollisionRadius = GetComponent<CapsuleCollider>().radius;
+                targetCollisionRadius =target.GetComponent<CapsuleCollider>().radius;
 
                 StartCoroutine(UpdatePath());
             }
+        }
+
+        public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
+        {
+            if (damage >= health)
+            {
+                Destroy( Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection))as GameObject,2);
+            }
+            base.TakeHit(damage, hitPoint, hitDirection);
         }
         void OnTargetDeath()
         {
