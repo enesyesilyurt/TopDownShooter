@@ -10,6 +10,9 @@ namespace Assets.Scripts
         public float msBetweenShots = 100;
         public float muzzleVelocity = 35;
 
+        public Transform shell;
+        public Transform shellEjection;
+
         float nextShootTime;
         public void Shoot()
         {
@@ -18,6 +21,8 @@ namespace Assets.Scripts
                 nextShootTime = Time.time + msBetweenShots / 1000;
                 Projecttile newProjecttile = Instantiate(projecttile, muzzle.position, muzzle.rotation) as Projecttile;
                 newProjecttile.SetSpeed(muzzleVelocity);
+
+                Instantiate(shell, shellEjection.position,shellEjection.rotation);
             }
 
         }
