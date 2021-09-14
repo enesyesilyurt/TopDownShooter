@@ -12,6 +12,12 @@ namespace Assets.Scripts
 
         public Transform shell;
         public Transform shellEjection;
+        Muzzleflash muzzleflash;
+
+        private void Start()
+        {
+            muzzleflash = GetComponent<Muzzleflash>();
+        }
 
         float nextShootTime;
         public void Shoot()
@@ -23,6 +29,7 @@ namespace Assets.Scripts
                 newProjecttile.SetSpeed(muzzleVelocity);
 
                 Instantiate(shell, shellEjection.position,shellEjection.rotation);
+                muzzleflash.Activate();
             }
 
         }
