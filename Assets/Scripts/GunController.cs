@@ -25,11 +25,18 @@ namespace Assets.Scripts
             equippedGun.transform.parent = weaponHold;
         }
 
-        public void Shoot()
+        public void OnTriggerHold()
         {
             if (equippedGun != null)
             {
-                equippedGun.Shoot();
+                equippedGun.OntriggerHold();
+            }
+        }
+        public void OnTriggerRelease()
+        {
+            if (equippedGun != null)
+            {
+                equippedGun.OntriggerRelease();
             }
         }
     }
