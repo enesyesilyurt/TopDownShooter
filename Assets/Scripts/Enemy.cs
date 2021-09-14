@@ -47,7 +47,8 @@ namespace Assets.Scripts
         {
             if (damage >= health)
             {
-                Destroy( Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection))as GameObject,2);
+                transform.LookAt(target);
+                DeathEffect.Play();
             }
             base.TakeHit(damage, hitPoint, hitDirection);
         }

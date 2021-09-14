@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 using System;
 
@@ -19,13 +20,6 @@ namespace Assets.Scripts
         {
             TakeDamage(damage);
         }
-        [ContextMenu("Self Destruct")]
-        protected void Die()
-        {
-            dead = true;
-            OnDeath?.Invoke();
-            GameObject.Destroy(gameObject);
-        }
 
         public virtual void TakeDamage(float damage)
         {
@@ -34,6 +28,15 @@ namespace Assets.Scripts
             {
                 Die();
             }
+        }
+        [ContextMenu("Self Destruct")]
+        protected void Die()
+        {
+            dead = true;
+            OnDeath?.Invoke();
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
+            gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            GameObject.Destroy(gameObject,2);
         }
     }
 }
