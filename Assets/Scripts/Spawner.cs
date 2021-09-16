@@ -6,6 +6,8 @@ namespace Assets.Scripts
 {
     public class Spawner : MonoBehaviour
     {
+        public bool devMode;
+
         public Wave[] waves;
         public Enemy enemy;
 
@@ -58,7 +60,19 @@ namespace Assets.Scripts
                     enemiesRemainingToSpawn--;
                     nextSpawnTime = Time.time + currentWave.timeBetweenSpawns;
 
-                    StartCoroutine(SpawnEnemy());
+                    StartCoroutine("SpawnEnemy");
+                }
+            }
+            if (devMode)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    StopCoroutine("SpawnEnemy");
+                    foreach (var enemy in FindObjectsOfType<Enemy>())
+                    {
+                        GameObject.Destroy(enemy.gameObject);
+                    }
+                    NextWave();
                 }
             }
         }

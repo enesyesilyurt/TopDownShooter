@@ -34,9 +34,11 @@ namespace Assets.Scripts
         {
             dead = true;
             OnDeath?.Invoke();
-            gameObject.GetComponent<MeshRenderer>().enabled = false;
-            gameObject.GetComponent<NavMeshAgent>().enabled = false;
-            GameObject.Destroy(gameObject,2);
+            if (gameObject.GetComponent<Enemy>())
+            {
+                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                GameObject.Destroy(gameObject, 2);
+            }
         }
     }
 }
