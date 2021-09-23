@@ -39,5 +39,9 @@ namespace Assets.Scripts
                 equippedGun.OntriggerRelease();
             }
         }
+        public float GunHeight
+        {
+            get { return weaponHold.position.y; }
+        }
     }
 }

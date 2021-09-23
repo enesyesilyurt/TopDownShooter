@@ -9,6 +9,7 @@ namespace Assets.Scripts
     public class Player : LivingEntity
     {
         public float MoveSpeed = 5;
+        public Crosshairs crosshairs;
         Camera viewCamera;
         PlayerController controller;
         GunController gunController;
@@ -27,11 +28,13 @@ namespace Assets.Scripts
             controller.Move(moveVelocity);
 
             Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
-            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            Plane groundPlane = new Plane(Vector3.up, Vector3.up*gunController.GunHeight);
             if (groundPlane.Raycast(ray, out float rayDistance))
             {
                 Vector3 point = ray.GetPoint(rayDistance);
                 controller.LookAt(point);
+                crosshairs.transform.position = point;
+                crosshairs.DetectTargets(ray);
             }
 
             if (Input.GetMouseButton(0))

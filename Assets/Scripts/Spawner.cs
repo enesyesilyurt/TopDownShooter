@@ -87,7 +87,7 @@ namespace Assets.Scripts
                 spawnTile = map.GetTileFromPosition(playerTransform.position);
             }
             Material tileMat = spawnTile.GetComponent<Renderer>().material;
-            Color initialColour = tileMat.color;
+            Color initialColour = Color.white;
             Color flashColour = Color.red;
             float spawnTimer = 0;
             while (spawnTimer < spawnDelay)

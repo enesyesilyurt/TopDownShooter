@@ -14,6 +14,8 @@ namespace Assets.Scripts
         NavMeshAgent pathFinder;
         Transform target;
         LivingEntity targetEntity;
+        Material skinMaterial;
+        Color originalColour;
 
         float attackDistanceThreshold = 1.5f;
         float timeBetweenAttacks = 1;
@@ -58,9 +60,9 @@ namespace Assets.Scripts
 
             }
             startingHealth = enemyHealth;
-            Material skinMaterial = GetComponent<Renderer>().material;
+            skinMaterial = GetComponent<Renderer>().material;
             skinMaterial.color = skinColor;
-            //originalColour = skinMaterial.color;
+            originalColour = skinMaterial.color;
         }
 
         public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
